@@ -25,23 +25,24 @@ describe("Categories", () => {
   });
 
   it("Selecting a category should filter the list", () => {
+    // Check that no category is selected at first
     cy.get('[data-testid="categories-list"]').within(() => {
-      // Check that none are selected
       cy.get('[data-selected="false"]').should("have.length", 4);
     });
 
     // Get a baseline check that we have 20 products
     cy.get('[data-testid="product-link"]').should("have.length", 20);
 
+    // Select the 'electronics' category
     cy.get('[data-testid="categories-list"]').within(() => {
       cy.get('[data-elementid="electronics"]').click();
-
-      // Check that the category is selected
-      cy.get('[data-selected="true"]').should("have.length", 1);
-      cy.get('[data-selected="false"]').should("have.length", 3);
     });
 
-    // Now we should only have 6!
+    // Check that the 'electronics' category is selected
+    cy.get('[data-selected="true"]').should("have.length", 1);
+    cy.get('[data-selected="false"]').should("have.length", 3);
+
+    // Now we should only have 6 products in the 'electronics' category
     cy.get('[data-testid="product-link"]').should("have.length", 6);
   });
 
@@ -51,10 +52,32 @@ describe("Categories", () => {
      *
      * We will give you a couple of steps here, this does not mean that every step is 1 line of code!
      */
+    
     // 1. Check that no category is selected
-    // 2. Click a category
-    // 3. Check that that category is selected
-    // 4. Click a different category
-    // 5. Check that only the new category is selected
+    cy.get('[data-testid="categories-list"]').within(() => {
+      cy.get('[data-selected="false"]').should("have.length", 4);
+    });
+
+    // 2. Click a category (e.g., 'electronics')
+    cy.get('[data-testid="categories-list"]').within(() => {
+      cy.get('[data-elementid="electronics"]').click();
+    });
+
+    // 3. Check that 'electronics' is selected
+    cy.get('[data-testid="categories-list"]').within(() => {
+      cy.get('[data-selected="true"]').should("have.length", 1);
+      cy.get('[data-selected="false"]').should("have.length", 3);
+    });
+
+    // 4. Click another category (e.g., 'clothing')
+    cy.get('[data-testid="categories-list"]').within(() => {
+      cy.get('[data-elementid="clothing"]').click();
+    });
+
+    // 5. Check that only the new 'clothing' category is selected and 'electronics' is deselected
+    cy.get('[data-testid="categories-list"]').within(() => {
+      cy.get('[data-selected="true"]').should("have.length", 1);
+      cy.get('[data-selected="false"]').should("have.length", 3);
+    });
   });
 });
